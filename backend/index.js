@@ -1,3 +1,4 @@
+import path from "node:path"
 import express from "express"
 import cookieParser from "cookie-parser"
 import helmet from "helmet"
@@ -5,10 +6,14 @@ import cors from "cors"
 import rateLimit from "express-rate-limit"
 import morgan from "morgan"
 import jwt from "jsonwebtoken"
+import multer from "multer"
+import { customAlphabet } from "nanoid"
 
 const PORT = process.env.PORT || 3_000
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const JWT_SECRET = process.env.JWT_SECRET
+
+const nanoid = customAlphabet( "abcdefghijklmnopqrstuvwxyz", 16 )
 
 const app = express()
 
@@ -57,6 +62,25 @@ app.use( rateLimit( {
 app.use( morgan( ":method :url :status :response-time ms [:remote-addr :user-agent]" ) )
 
 /*
+	File uploading middleware
+*/
+
+const storage = multer.diskStorage( {
+	destination: ( req, file, cb ) => {
+
+		cb( null, "assets/" )
+	},
+	filename: ( req, file, cb ) => {
+
+		const filename = nanoid() + path.extname( file.originalname )
+
+		cb( null, filename )
+	},
+} )
+
+const upload = multer( { storage } )
+
+/*
 	Protect routes
 */
 
@@ -80,6 +104,16 @@ function privateRoute( req, res, next ) {
 }
 
 // ---ROUTES---
+
+app.post( "/upload", upload.single( "file" ), ( req, res ) => {
+
+	if ( !req.file ) {
+
+		return res.status( 400 ).send( { message: "No file uploaded!" } )
+	}
+
+	res.status( 201 ).send( { message: "ok" } )
+} )
 
 app.get( "/health", ( req, res ) => res.send( {
 	status: "ok",
