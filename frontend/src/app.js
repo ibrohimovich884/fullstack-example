@@ -1,3 +1,5 @@
+import "@app/css/main.css"
+
 window.onload = () => {
 
 	const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
@@ -36,12 +38,34 @@ window.onload = () => {
 
 	const button = document.querySelector( "button" )
 
+	const input = document.querySelector( "input" )
+	input.addEventListener( "change", async e => {
+
+		const file = e.target.files[ 0 ]
+
+		const formData = new FormData()
+		formData.append( "file", file, file.name )
+
+		const response = await fetch( API_URL + "/upload", {
+			method: "POST",
+			credentials: "include",
+			// headers: {
+			// 	"Content-Type": "multipart/form-data",
+			// },
+			body: formData,
+		} )
+
+		console.log( response )
+	} )
+
 	button.onclick = () => {
 
-		fetch( API_URL + "/some-data", {
-			credentials: "include",
-		} )
-		.then( response => response.json() )
-		.then( json => console.log( json ) )
+		input.click()
+
+		// fetch( API_URL + "/some-data", {
+		// 	credentials: "include",
+		// } )
+		// .then( response => response.json() )
+		// .then( json => console.log( json ) )
 	}
 }

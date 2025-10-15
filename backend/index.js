@@ -105,7 +105,7 @@ function privateRoute( req, res, next ) {
 
 // ---ROUTES---
 
-app.post( "/upload", upload.single( "file" ), ( req, res ) => {
+app.post( "/upload", [ upload.single( "file" ), privateRoute ], ( req, res ) => {
 
 	if ( !req.file ) {
 
