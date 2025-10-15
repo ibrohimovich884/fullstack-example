@@ -1,0 +1,52 @@
+HTML — 50 Questions
+1.HTML nima?
+2.HTML va XHTML orasidagi farq nima?
+3.<!DOCTYPE html> nima uchun kerak?
+4.<meta> tegining vazifasi nima?
+5.<head> va <body> orasidagi farq nima?
+6.<div> va <span> farqi nima?
+7.<a> tegida target='_blank' nima qiladi?
+8.<img> tegida alt atributi nima uchun kerak?
+9.<form> elementi nima uchun ishlatiladi?
+10.<input> tiplarini sanab bering.
+11.<label> elementi nima vazifa bajaradi?
+12.<table> bilan bog‘liq teglarni ayting.
+13.<thead>, <tbody>, <tfoot> nimani bildiradi?
+14.<ul> va <ol> farqi nima?
+15.<iframe> nima va qachon ishlatiladi?
+16.<video> va <audio> qanday ishlaydi?
+17.<source> tegining roli nima?
+18.<canvas> nima uchun ishlatiladi?
+19.<section>, <article>, <header>, <footer> kabi semantik teglar nimani bildiradi?
+20.HTML5 da qanday yangi teglar qo‘shilgan?
+21.<script> tegini qaerda joylashtirish kerak?
+22.Inline, internal va external scriptlar farqi nima?
+23.<link> tegining vazifasi nima?
+24.Accessibility (kirish imkoniyati) nima?
+25.aria-label nima uchun ishlatiladi?
+26.SEO uchun HTMLda nimalarga e’tibor berish kerak?
+27.<form> ichidagi action va method atributlari nimani anglatadi?
+28.GET va POST metodlari farqi nima?
+29.<button> va <input type='button'> farqi nima?
+30.<blockquote> nima uchun ishlatiladi?
+31.<abbr> tegining ma’nosi nima?
+32.<strong> va <b> farqi nima?
+33.<em> va <i> farqi nima?
+34.HTMLda kommentariya qanday yoziladi?
+35.HTMLda favicon qanday qo‘shiladi?
+36.<figure> va <figcaption> nimani bildiradi?
+37.<nav> tegining vazifasi nima?
+38.HTML entity nima?
+39.<br> va <hr> farqi nima?
+40.<details> va <summary> teglarining vazifasi nima?
+41.<mark> tegini nima uchun ishlatamiz?
+42.HTMLda data-* atributlari nima uchun kerak?
+43.<template> tegining vazifasi nima?
+44.HTML validation nima?
+45.<noscript> nima qiladi?
+46.<base> tegining ma’nosi nima?
+47.<time> tegida nimalar yoziladi?
+48.HTMLda responsive dizayn uchun nima ishlatiladi?
+
+49.<progress> va <meter> farqi nima?
+50.HTML faylini brauzer qanday o‘qiydi?
