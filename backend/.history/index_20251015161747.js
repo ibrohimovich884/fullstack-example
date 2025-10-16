@@ -1,5 +1,4 @@
 import path from "node:path"
-import { fileURLToPath } from "node:url"
 import express from "express"
 import cookieParser from "cookie-parser"
 import helmet from "helmet"
@@ -9,19 +8,12 @@ import morgan from "morgan"
 import jwt from "jsonwebtoken"
 import multer from "multer"
 import { customAlphabet } from "nanoid"
-import { query } from "./db.js"
-
-const __dirname = path.dirname( fileURLToPath( import.meta.url ) )
-
-console.log( await query( `select * from assets` ) )
 
 const PORT = process.env.PORT || 3_000
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const JWT_SECRET = process.env.JWT_SECRET
 
 const nanoid = customAlphabet( "abcdefghijklmnopqrstuvwxyz", 16 )
-
-const assets = new Map()
 
 const app = express()
 
@@ -80,13 +72,7 @@ const storage = multer.diskStorage( {
 	},
 	filename: ( req, file, cb ) => {
 
-		const id = nanoid()
-
-		const filename = id + path.extname( file.originalname )
-
-		assets.set( id, {
-			path: filename,
-		} )
+		const filename = nanoid() + path.extname( file.originalname )
 
 		cb( null, filename )
 	},
@@ -118,28 +104,6 @@ function privateRoute( req, res, next ) {
 }
 
 // ---ROUTES---
-
-app.get( "/view/:fileID", ( req, res ) => {
-
-	const { fileID } = req.params
-
-	if ( assets.has( fileID ) ) {
-
-		const file = assets.get( fileID )
-
-		const filePath = path.join( __dirname, "assets", file.path )
-
-		return res.sendFile( filePath, err => {
-
-			if ( err ) {
-
-				res.status( 500 ).send( "Error sending file" )
-			}
-		} )
-	}
-
-	res.status( 404 ).end()
-} )
 
 app.post( "/upload", [ upload.single( "file" ), privateRoute ], ( req, res ) => {
 

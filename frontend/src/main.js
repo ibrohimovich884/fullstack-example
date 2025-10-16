@@ -3,91 +3,85 @@ import * as THREE from "three"
 import { OrbitControls } from "three/addons/controls/OrbitControls"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader"
 
-const glbLoader = new GLTFLoader().setPath( "/assets/glb" )
+const API_URL = import.meta.env.VITE_API_URL
 
-const canvas = document.getElementById( "gl" )
+handleRoutes()
 
-const scene = new THREE.Scene()
-scene.background = new THREE.Color( 0x000066 )
-const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10_000 )
-camera.position.set( 50, 50, 50 )
-const renderer = new THREE.WebGLRenderer( { canvas, antialias: true, } )
+async function handleRoutes() {
 
-renderer.setPixelRatio( window.devicePixelRatio )
-renderer.setSize( window.innerWidth, window.innerHeight )
+	const { pathname } = window.location
+	const fileID = pathname.substr( 1 )
+	const response = await fetch( API_URL + "/view/" + fileID )
 
-const controls = new OrbitControls( camera, canvas )
-controls.minDistance = 10
+	if ( response.ok ) {
 
-window.addEventListener( "resize", () => {
+		run( { arrayBuffer: await response.arrayBuffer() } )
+	}
+	else {
 
-	camera.aspect = window.innerWidth / window.innerHeight
-	camera.updateProjectionMatrix()
-
-	renderer.setSize( window.innerWidth, window.innerHeight )
-} )
-
-const textureLoader = new THREE.TextureLoader().setPath( "/assets" )
-
-const grassTexture = textureLoader.load( "/grass.jpg", t => t.colorSpace = THREE.SRGBColorSpace )
-
-const ground = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshBasicMaterial( { map: grassTexture } ) )
-ground.rotateX( - Math.PI / 2 )
-scene.add( ground )
-
-// Lights
-
-const light1 = new THREE.DirectionalLight()
-light1.position.set( 2, 5, 3 )
-scene.add( light1 )
-
-const light2 = new THREE.AmbientLight()
-scene.add( light2 )
-
-render()
-
-function render() {
-
-	renderer.render( scene, camera )
-
-	requestAnimationFrame( render )
+		console.log( "DEFUALT" )
+	}
 }
 
-// const geometry = new THREE.SphereGeometry()
-// const material = new THREE.MeshStandardMaterial()
-// const mesh = new THREE.Mesh( geometry, material )
-// scene.add( mesh )
+async function run( { arrayBuffer } ) {
 
-glbLoader.load( "/cb.glb", glb => {
+	const glbLoader = new GLTFLoader().setPath( API_URL + "/view/" )
 
-	const cp = glb.scene
+	const canvas = document.getElementById( "gl" )
 
-	let y = 0
+	const scene = new THREE.Scene()
+	scene.background = new THREE.Color( 0x000066 )
+	const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10_000 )
+	camera.position.set( 50, 50, 50 )
+	const renderer = new THREE.WebGLRenderer( { canvas, antialias: true, } )
 
-	const time = new THREE.Clock()
+	renderer.setPixelRatio( window.devicePixelRatio )
+	renderer.setSize( window.innerWidth, window.innerHeight )
 
-	const animation = () => {
+	const controls = new OrbitControls( camera, canvas )
+	controls.minDistance = 10
 
-		const t = time.getElapsedTime()
+	window.addEventListener( "resize", () => {
 
-		const speed = 0.15
+		camera.aspect = window.innerWidth / window.innerHeight
+		camera.updateProjectionMatrix()
 
-		if ( Math.floor( t % 2 ) === 0 ) {
+		renderer.setSize( window.innerWidth, window.innerHeight )
+	} )
 
-			cp.position.z = cp.position.z + speed
-		}
-		else {
+	const textureLoader = new THREE.TextureLoader().setPath( "/assets" )
 
-			cp.position.z = cp.position.z - speed
-		}
+	const grassTexture = textureLoader.load( "/grass.jpg", t => t.colorSpace = THREE.SRGBColorSpace )
 
-		requestAnimationFrame( animation )
+	const ground = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshBasicMaterial( { map: grassTexture } ) )
+	ground.rotateX( - Math.PI / 2 )
+	scene.add( ground )
+
+	// Lights
+
+	const light1 = new THREE.DirectionalLight()
+	light1.position.set( 2, 5, 3 )
+	scene.add( light1 )
+
+	const light2 = new THREE.AmbientLight()
+	scene.add( light2 )
+
+	render()
+
+	function render() {
+
+		renderer.render( scene, camera )
+
+		requestAnimationFrame( render )
 	}
 
-	animation()
+	const geometry = new THREE.SphereGeometry()
+	const material = new THREE.MeshStandardMaterial()
+	const mesh = new THREE.Mesh( geometry, material )
+	scene.add( mesh )
 
-	scene.add( cp )
-} )
+	await glbLoader.parse( arrayBuffer, "", glb => scene.add( glb.scene ) )
+}
 
 /*
 window.onload = () => {
