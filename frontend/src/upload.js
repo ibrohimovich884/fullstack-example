@@ -30,8 +30,10 @@ export function upload() {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify( { token } ),
+				
 			} )
-
+			console.log(token);
+			
 			if ( response.ok ) {
 
 				console.log( await response.json() )
